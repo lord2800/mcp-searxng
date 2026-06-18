@@ -1,0 +1,38 @@
+name: Build
+
+on:
+    workflow_call:
+        inputs:
+            toolchain:
+                required: true
+                type: string
+            target:
+                required: true
+                type: string
+            profile:
+                required: true
+                type: string
+            features:
+                required: true
+                type: string
+
+permissions:
+    contents: read
+
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+              with:
+                toolchain: ${{ inputs.toolchain }}
+                target: ${{ inputs.target }}
+            - name: (${{ inputs.toolchain }}) Cargo build ${{ inputs.profile }} ${{ inputs.features }}
+              uses: houseabsolute/actions-rust-cross@fe6ede73c7f0a50412ec05994e2aa5a7bf635eac
+              with:
+                target: ${{ inputs.target }}
+                args: "--locked --profile ${{ inputs.profile }} --features ${{ inputs.features }}"

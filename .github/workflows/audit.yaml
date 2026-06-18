@@ -1,0 +1,22 @@
+name: Audit
+
+on:
+    workflow_call:
+
+permissions:
+    contents: read
+
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    fmt:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+            - name: Audit check
+              uses: actions-rust-lang/audit@72c09e02f132669d52284a3323acdb503cfc1a24
+              with:
+                denyWarnings: true
+                createIssues: false

@@ -1,0 +1,26 @@
+[package]
+name = "mcp-searxng"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+
+[features]
+default = []
+
+[dependencies]
+reqwest = { version = "0.13", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+url = "2"
+rmcp = { version = "1.7", features = [
+    "server",
+    "transport-io",
+    "transport-streamable-http-server",
+] }
+schemars = "0.8"
+anyhow = "1"
+axum = "0.8"
+derive_more = { version = "2.1.1", features = ["display"] }

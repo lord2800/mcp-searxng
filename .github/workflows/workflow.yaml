@@ -1,0 +1,71 @@
+name: Workflow
+
+on:
+    push:
+    pull_request:
+
+permissions:
+    contents: read
+
+jobs:
+    audit:
+        name: audit
+        uses: ./.github/workflows/audit.yaml
+        secrets: inherit
+    lint:
+        name: lint
+        needs: audit
+        strategy:
+            matrix:
+                toolchains: [stable, nightly]
+        uses: ./.github/workflows/lint.yaml
+        secrets: inherit
+        with:
+            toolchain: ${{ matrix.toolchains }}
+    check:
+        name: check
+        needs: lint
+        strategy:
+            matrix:
+                toolchains: [stable, nightly]
+                profiles: [dev, release]
+        uses: ./.github/workflows/check.yaml
+        secrets: inherit
+        with:
+            toolchain: ${{ matrix.toolchains }}
+            profile: ${{ matrix.profiles }}
+    test:
+        name: test
+        needs: check
+        strategy:
+            matrix:
+                toolchains: [stable, nightly]
+        uses: ./.github/workflows/test.yaml
+        secrets: inherit
+        with:
+            toolchain: ${{ matrix.toolchains }}
+    build:
+        name: build
+        needs: test
+        strategy:
+            matrix:
+                toolchains: [stable, nightly]
+                profiles: [dev, release]
+                features: [default]
+                targets:
+                    # windows x64
+                    - x86_64-pc-windows-msvc
+                    # mac arm64
+                    # TODO figure out why this fails
+                    # - aarch64-apple-darwin
+                    # linux arm64
+                    - aarch64-unknown-linux-gnu
+                    # linux x64
+                    - x86_64-unknown-linux-gnu
+        uses: ./.github/workflows/build.yaml
+        secrets: inherit
+        with:
+            toolchain: ${{ matrix.toolchains }}
+            profile: ${{ matrix.profiles }}
+            features: ${{ matrix.features }}
+            target: ${{ matrix.targets }}

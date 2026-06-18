@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+    workflow_call:
+        inputs:
+            toolchain:
+                required: true
+                type: string
+
+permissions:
+    contents: read
+
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    fmt:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+              with:
+                toolchain: ${{ inputs.toolchain }}
+                components: rustfmt
+            - name: (${{ inputs.toolchain }}) Format check
+              uses: actions-rust-lang/rustfmt@4066006ec54a31931b9b1fddfd38f2fdf2d27143

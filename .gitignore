@@ -1,0 +1,11 @@
+*
+!.gitignore
+!src/
+!src/*.rs
+!src/**/*.rs
+!Cargo.toml
+!Cargo.lock
+!README.md
+!.github/
+!.github/workflows/
+!.github/workflows/*.yaml

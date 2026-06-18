@@ -1,0 +1,25 @@
+name: Test
+
+on:
+    workflow_call:
+        inputs:
+            toolchain:
+                required: true
+                type: string
+
+permissions:
+    contents: read
+
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+              with:
+                toolchain: ${{ inputs.toolchain }}
+            - name: (${{ inputs.toolchain }}) Cargo test
+              run: cargo test
